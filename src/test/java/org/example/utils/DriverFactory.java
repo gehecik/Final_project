@@ -29,7 +29,7 @@ public class DriverFactory {
         //WebDriverManager.chromiumdriver().setup();
         var options = new ChromeOptions();
         options.addArguments("--incognito");
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
         driver.manage().deleteAllCookies();
     }
 
