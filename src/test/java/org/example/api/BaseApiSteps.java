@@ -2,7 +2,7 @@ package org.example.api;
 
 import io.restassured.response.Response;
 
-public class BaseSteps {
+public class BaseApiSteps {
     public static void checkStatusCode(Response response, int statusCode) {
         response.then().statusCode(statusCode);
     }
