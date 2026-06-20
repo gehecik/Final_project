@@ -1,21 +1,10 @@
-package org.example.steps;
+package org.example.steps.user;
 
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.response.Response;
-import org.example.api.ActionsUser;
-import org.example.api.BaseApiSteps;
-import org.example.data.User;
-import org.example.pages.HomePage;
-import org.example.pages.user.HomeAuthPage;
 import org.example.tests.TestContext;
-import org.example.utils.DriverManager;
 import org.example.utils.Hooks;
-import org.openqa.selenium.WebDriver;
-
-import java.net.HttpURLConnection;
 
 
 public class RegisterSteps {
@@ -37,7 +26,7 @@ public class RegisterSteps {
         context.homeAuthPage = context.homePage.clickCreateAccountButton();
     }
 
-    @And("User clicks Create Account button without going to AuthPage")
+    @And("User clicks Enter button for registration and stay")
     public void clickCreateAccountWithoutGoing() throws InterruptedException {
         context.homePage.clickCreateAccountButtonAndStay();
     }
@@ -50,7 +39,7 @@ public class RegisterSteps {
 
     @Then("User should see registration error")
     public void checkUserError() {
-        context.homePage.checkError();
+        context.homePage.checkRegisterError();
     }
 
     @Then("User should see registration error the passwords are different")
