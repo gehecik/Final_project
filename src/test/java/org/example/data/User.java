@@ -15,12 +15,20 @@ public class User {
     private String password;
 
     public static User userWithRandomField() {
-        String email = RandomStringUtils.randomAlphabetic(5) + "@yandex.ru";
+        String email = RandomStringUtils.randomAlphabetic(5).toLowerCase() + "@yandex.ru";
         String password = RandomStringUtils.randomNumeric(10);
         return User.builder()
                 .name("name")
                 .email(email)
                 .password(password)
+                .build();
+    }
+
+    public static User userWithNonExist() {
+        return User.builder()
+                .name("name")
+                .email("wrong@email.ru")
+                .password("password")
                 .build();
     }
 
