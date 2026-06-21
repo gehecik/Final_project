@@ -2,6 +2,7 @@ package org.example.pages;
 
 import io.qameta.allure.Step;
 import org.example.data.Ad;
+import org.example.data.AdCard;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -36,6 +37,10 @@ public class BasePage {
     public void waitLocator(By locator) {
         new WebDriverWait(driver, EXPLICIT_TIMEOUT)
                 .until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+    public void waitURL(String url) {
+        new WebDriverWait(driver, EXPLICIT_TIMEOUT)
+                .until(ExpectedConditions.urlContains(url));
     }
 
     public void reloadPage(By locator, String oldValue) {
@@ -85,9 +90,10 @@ public class BasePage {
         enterNewValue(locator, value);
     }
 
-    public void checkImg(WebElement card, Ad ad) {
+    public void checkImg(AdCard card, Ad ad) {
         By imageLocator = By.xpath(".//img");
-        String actualSrc = card.findElement(imageLocator).getAttribute("src");
+        //String actualSrc = card.findElement(imageLocator).getAttribute("src");
+        String actualSrc = card.getImgSrc();
         String expectedImg = null;
 
         if (ad.getImg1() != null && !ad.getImg1().isBlank()) {
@@ -107,16 +113,12 @@ public class BasePage {
         }
     }
 
-    public void checkCost(WebElement card, Ad ad) {
-        By priceLocator = By.xpath(".//div[contains(@class,'price')]");
-        String actualPrice = card.findElement(priceLocator).getText().replaceAll("[^0-9]", "");
-        String expectedPrice = String.valueOf(Integer.parseInt(ad.getCost()));
-        assertEquals(expectedPrice, actualPrice);
+    public void checkCost(AdCard card, Ad ad) {
+       assertEquals(String.valueOf(Integer.parseInt(ad.getCost())),card.getCost());
     }
 
-    public void checkEdit(WebElement card, Ad ad, By editLocator) {
-        boolean hasEditButton = !card.findElements(editLocator).isEmpty();
-        assertTrue(hasEditButton);
+    public void checkEdit(AdCard card) {
+        assertTrue(card.getButton().getAttribute("class").contains("editButton"));
     }
 
 

@@ -26,7 +26,7 @@ public class HomePage extends BasePage {
     protected final By errorCreate = By.xpath("//h1[text()='Чтобы разместить объявление, авторизуйтесь']");
     protected final By adButton = By.xpath("//button[text()='Разместить объявление']");
 
-    WebElement card;
+    //WebElement card;
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -34,15 +34,6 @@ public class HomePage extends BasePage {
 
     public void openPage() {
         driver.get(BASE_URL);
-    }
-
-    public AdPage openAdPage(Ad ad, int adId) {
-        //driver.get(BASE_URL + "/listing/" + adId);
-
-        searchAd(ad);
-        card.click();
-
-        return new AdPage(driver);
     }
 
     @Step("Click on the button (login and registration)")
@@ -133,40 +124,5 @@ public class HomePage extends BasePage {
         waitLocator(adButton);
         WebElement el = waitClickable(adButton);
         el.click();
-    }
-
-    @Step("Search the ad")
-    public void searchAd(Ad ad) {
-        By cardLocator = getCardLocator(ad, false);
-
-        int attempts = 1;
-        int maxAttempts = getMaxAttempts(bar);
-
-        while (attempts <= maxAttempts) {
-            if (!driver.findElements(cardLocator).isEmpty()) {
-                card = waitClickable(cardLocator);
-                checkCost(card, ad);
-
-                return;
-            }
-            presenceLocator(bar);
-            scrollToLocator(bar);
-            if (driver.findElements(arrowButton).isEmpty()) {
-                throw new AssertionError("Кнопка переключения не найдена");
-            }
-
-            WebElement next = presenceLocator(arrowButton);
-            String oldPage = presenceLocator(bar).getText();
-            String oldAd = presenceLocator(adsList).getText();
-
-            if (next.isEnabled()) {
-                next.click();
-            }
-            reloadPage(bar, oldPage);
-            reloadPage(adsList, oldAd);
-
-            attempts++;
-        }
-        throw new AssertionError("Объявление '" + ad.getName() + "' отсутствует");
     }
 }

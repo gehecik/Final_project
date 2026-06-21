@@ -8,6 +8,7 @@ import org.example.tests.TestContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.nio.file.Paths;
 
@@ -39,6 +40,14 @@ public class EditListingPage extends BasePage {
 
         return new HomeAuthPage(driver);
     }
+    @Step("Change one image for ad")
+    public HomeAuthPage enterOneImage(String image) throws InterruptedException {
+        inputImg(image);
+        scrollToLocator(changeButton);
+        waitClickable(changeButton).click();
+
+        return new HomeAuthPage(driver);
+    }
 
     public void deleteImg(String imgField) {
         scrollToTop();
@@ -50,9 +59,17 @@ public class EditListingPage extends BasePage {
         WebElement el = presenceLocator(divImg);
         By deleteButton = By.className("trashButtonNoHover");
         el.findElement(deleteButton).click();
-        //waitLocator(inputImg);
-        //WebElement el = waitClickable(inputImg);
-        //el.click();
+    }
+
+    public void inputImg(String imgField) {
+        scrollToTop();
+        By divImg =  By.xpath("//div[contains(@class,'upload_editContainer__NMV1M')]" +
+                "[.//input[contains(@name,'" + imgField + "')]]");
+        scrollToLocator(divImg);
+
+
+        WebElement el = presenceLocator(divImg);
+        enterImg(imgField, "src/test/resources/images/img_4.jpg");
     }
 
     public void checkNewAdImgIsDeleted(String imgField) {
@@ -67,4 +84,19 @@ public class EditListingPage extends BasePage {
 
         assertTrue(spanEl.getText().contains("Добавить фото"));
     }
+    public void checkNewImg(String imgField) {
+        scrollToTop();
+        By divImg =  By.xpath("//div[contains(@class,'upload_editContainer__NMV1M')]" +
+                "[.//input[contains(@name,'" + imgField + "')]]" +
+                "/div[contains(@class,'upload_edit__YJ8yi')]");
+        System.out.println(divImg);
+        scrollToLocator(divImg);
+        WebElement el = presenceLocator(divImg);
+        System.out.println(el);
+        String actualSrc = el.findElement(divImg).getAttribute("style");
+        System.out.println(actualSrc);
+
+        assertTrue(actualSrc.contains("img_4.jpg"));
+    }
+
 }

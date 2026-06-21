@@ -10,9 +10,15 @@ Feature: Change an ad
       | img1     |
       | img2     |
       | img3     |
-#  Scenario: Successful changing ad with deleting image
-#    Given User is logged in
-#    And Ad is created
-#    When User clicks edit button
-#    And User changes fields and deleting one of the "img1"
-#    Then Ad should be changed and the "img1" is deleted
+
+  Scenario Outline: Successful change of image in ad
+    Given User is logged in
+    And Ad is created
+    When User clicks edit button
+    And User changes one of the "<image>"
+    Then "<image>" of the ad should be changed
+    Examples:
+      | image    |
+      | img1     |
+      | img2     |
+      | img3     |

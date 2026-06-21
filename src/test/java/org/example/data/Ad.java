@@ -36,7 +36,7 @@ public class Ad {
                 .build();
     }
 
-    public static Ad adNewData() {
+    public static Ad adNewDataWithImg() {
         String nameAd = "new_name_" + RandomStringUtils.randomNumeric(3);
         String costAd = RandomStringUtils.randomNumeric(6);
         return Ad.builder()
@@ -47,6 +47,19 @@ public class Ad {
                 .description("New description")
                 .cost(costAd)
                 .img1("src/test/resources/images/img_4.jpg")
+                .build();
+    }
+
+    public static Ad adNewData() {
+        String nameAd = "new_name_" + RandomStringUtils.randomNumeric(3);
+        String costAd = RandomStringUtils.randomNumeric(6);
+        return Ad.builder()
+                .name(nameAd)
+                .category("Технологии")
+                .condition("Новый")
+                .city("Казань")
+                .description("New description")
+                .cost(costAd)
                 .build();
     }
 
