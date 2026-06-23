@@ -40,53 +40,61 @@ public class TestContext {
         this.driver = driver;
     }
 
-    public HomePage getHomePage() {
-        return homePage;
+//    public HomePage getHomePage() {
+//        return homePage;
+//    }
+//
+//    public void setHomePage(HomePage homePage) {
+//        this.homePage = homePage;
+//    }
+//
+//    public HomeAuthPage getHomeAuthPage() {
+//        return homeAuthPage;
+//    }
+//
+//    public void setHomeAuthPage(HomeAuthPage homeAuthPage) {
+//        this.homeAuthPage = homeAuthPage;
+//    }
+//
+//    public CreateListingPage getCreateListingPage() {
+//        return createListingPage;
+//    }
+//
+//    public void setCreateListingPage(CreateListingPage createListingPage) {
+//        this.createListingPage = createListingPage;
+//    }
+//
+//    public String getUserLoginToken() {
+//        return userLoginToken;
+//    }
+//
+//    public void setUserLoginToken(String userLoginToken) {
+//        this.userLoginToken = userLoginToken;
+//    }
+//
+//    public String getUserCreateToken() {
+//        return userCreateToken;
+//    }
+//
+//    public void setUserCreateToken(String userCreateToken) {
+//        this.userCreateToken = userCreateToken;
+//    }
+//
+//
+//    public int getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(int userId) {
+//        this.userId = userId;
+//    }
+
+    public void deleteCurrentAd() throws InterruptedException {
+        if (ad == null) {
+            return;
+        }
+        homeAuthPage.checkAd(ad, false);
+        adPage = homeAuthPage.clickCard();
+        homeAuthPage = adPage.deleteAdFromCard();
     }
-
-    public void setHomePage(HomePage homePage) {
-        this.homePage = homePage;
-    }
-
-    public HomeAuthPage getHomeAuthPage() {
-        return homeAuthPage;
-    }
-
-    public void setHomeAuthPage(HomeAuthPage homeAuthPage) {
-        this.homeAuthPage = homeAuthPage;
-    }
-
-    public CreateListingPage getCreateListingPage() {
-        return createListingPage;
-    }
-
-    public void setCreateListingPage(CreateListingPage createListingPage) {
-        this.createListingPage = createListingPage;
-    }
-
-    public String getUserLoginToken() {
-        return userLoginToken;
-    }
-
-    public void setUserLoginToken(String userLoginToken) {
-        this.userLoginToken = userLoginToken;
-    }
-
-    public String getUserCreateToken() {
-        return userCreateToken;
-    }
-
-    public void setUserCreateToken(String userCreateToken) {
-        this.userCreateToken = userCreateToken;
-    }
-
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
 }

@@ -1,4 +1,5 @@
 Feature: Creating an ad
+  @cleanupAd
   Scenario Outline: Successful creating an ad without image
     Given User is logged in
     And User clicks Create an ad button
@@ -15,6 +16,7 @@ Feature: Creating an ad
       | Технологии    | Новый       | Нижний Новгород |
       | Авто          | Б/У         | Казань          |
 
+  @cleanupAd
   Scenario: Successful creating an ad
     Given User is logged in
     And User clicks Create an ad button
@@ -23,6 +25,7 @@ Feature: Creating an ad
     And User clicks Submit button
     Then Ad should be created
 
+  @cleanupAd
   Scenario Outline: Successful creating an ad with one image
     Given User is logged in
     And User clicks Create an ad button
@@ -36,6 +39,7 @@ Feature: Creating an ad
       | img2     |
       | img3     |
 
+  @cleanupAd
   Scenario: Successful creating default ad
     Given User is logged in
     And User clicks Create an ad button

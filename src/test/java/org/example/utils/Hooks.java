@@ -26,10 +26,17 @@ public class Hooks {
         context.user = User.userWithRandomField();
     }
 
-    @After
+    @After(order = 1, value = "@cleanupAd")
+    public void cleanup() throws InterruptedException {
+        if (Hooks.context.ad != null) {
+            Hooks.context.deleteCurrentAd();
+        }
+    }
+    @After(order = 0)
     public void after() {
         if (factory.getDriver() != null) {
             factory.getDriver().quit();
         }
     }
+
 }
