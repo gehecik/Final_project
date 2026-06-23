@@ -1,4 +1,5 @@
 Feature: Change an ad
+  @cleanupAd
   Scenario Outline: Successful changing ad with deleting image
     Given User is logged in
     And Ad is created
@@ -11,10 +12,11 @@ Feature: Change an ad
       | img2     |
       | img3     |
 
+  @cleanupAd
   Scenario Outline: Successful change of image in ad
     Given User is logged in
     And Ad is created
-    When User clicks edit button
+    When User clicks edit button from ad card
     And User changes one of the "<image>"
     Then "<image>" of the ad should be changed
     Examples:
