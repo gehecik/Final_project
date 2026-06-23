@@ -6,19 +6,22 @@ import org.example.tests.TestContext;
 import org.example.utils.Hooks;
 
 public class LoginSteps {
-    protected TestContext context = Hooks.context;
+    private TestContext context() {
+        return Hooks.context;
+    }
+
     @When("User clicks Enter button and stay")
     public void clickEnterButtonAndStay() {
-        context.homePage.clickEnter();
+        context().homePage.clickEnter();
     }
 
     @When("User enters email and wrong password")
     public void enterUserEmailAndWrongPassword() {
-        context.homePage.enterEmailAndWrongPassword(context.user);
+        context().homePage.enterEmailAndWrongPassword(context().user);
     }
 
     @Then("User should see login error")
     public void checkUserLoginError() {
-        context.homePage.checkLoginError();
+        context().homePage.checkLoginError();
     }
 }
