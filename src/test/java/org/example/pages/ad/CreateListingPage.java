@@ -6,9 +6,6 @@ import org.example.pages.BasePage;
 import org.example.pages.user.HomeAuthPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-import java.nio.file.Paths;
 
 public class CreateListingPage extends BasePage {
     protected final By newAd = By.xpath("//h1[text()='Новое объявление']");

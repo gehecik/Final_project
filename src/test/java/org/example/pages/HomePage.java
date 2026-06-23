@@ -1,10 +1,7 @@
 package org.example.pages;
 
 import io.qameta.allure.Step;
-import org.example.data.Ad;
 import org.example.data.User;
-import org.example.pages.ad.AdPage;
-import org.example.pages.ad.CreateListingPage;
 import org.example.pages.user.HomeAuthPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -25,8 +22,6 @@ public class HomePage extends BasePage {
     protected final By errorLogin = By.xpath("//span[@class='input_span__yWPqB' and text()='Логин или пароль неверны']");
     protected final By errorCreate = By.xpath("//h1[text()='Чтобы разместить объявление, авторизуйтесь']");
     protected final By adButton = By.xpath("//button[text()='Разместить объявление']");
-
-    //WebElement card;
 
     public HomePage(WebDriver driver) {
         super(driver);

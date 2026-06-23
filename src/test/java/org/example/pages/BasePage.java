@@ -11,7 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.nio.file.Paths;
-import java.time.Duration;
 
 import static org.example.utils.EnvConfig.EXPLICIT_TIMEOUT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +26,7 @@ public class BasePage {
     protected final By bar = By.xpath("//p[@class='spanGlobal']");
     protected final By arrowButton = By.xpath("//button[contains(@class,'arrowButton--right') and contains(@class,'undefined')]");
     protected final By adsList = By.xpath("//div[@class='grid_twoColumns__HwA+w']//h2");
+    private final By cards = By.cssSelector("div[class*='card']");
 
     protected final WebDriver driver;
 
@@ -41,6 +41,18 @@ public class BasePage {
     public void waitURL(String url) {
         new WebDriverWait(driver, EXPLICIT_TIMEOUT)
                 .until(ExpectedConditions.urlContains(url));
+    }
+    public void waitInvisibility(By locator) {
+        new WebDriverWait(driver, EXPLICIT_TIMEOUT)
+                .until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    public void waitCardsLoaded() {
+        new WebDriverWait(driver, EXPLICIT_TIMEOUT)
+                .until(d ->
+                        !d.findElements(
+                                By.cssSelector("div[class*='card']")
+                        ).isEmpty());
     }
 
     public void reloadPage(By locator, String oldValue) {
@@ -92,7 +104,7 @@ public class BasePage {
 
     public void checkImg(AdCard card, Ad ad) {
         By imageLocator = By.xpath(".//img");
-        //String actualSrc = card.findElement(imageLocator).getAttribute("src");
+
         String actualSrc = card.getImgSrc();
         String expectedImg = null;
 

@@ -4,15 +4,10 @@ import io.qameta.allure.Step;
 import org.example.data.Ad;
 import org.example.pages.BasePage;
 import org.example.pages.user.HomeAuthPage;
-import org.example.tests.TestContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EditListingPage extends BasePage {
@@ -31,9 +26,9 @@ public class EditListingPage extends BasePage {
 
     @Step("Enter full data for ad")
     public HomeAuthPage enterNewData(Ad newAd, String imgField){
-        System.out.println("Enter full data for ad");
+
         deleteImg(imgField);
-        //enterImg(imgField, newAd.getImg1());
+
         enterData(newAd);
         scrollToLocator(changeButton);
         waitClickable(changeButton).click();
@@ -41,11 +36,13 @@ public class EditListingPage extends BasePage {
         return new HomeAuthPage(driver);
     }
     @Step("Change one image for ad")
-    public HomeAuthPage enterOneImage(String image) throws InterruptedException {
+    public void enterOneImage(String image) throws InterruptedException {
         inputImg(image);
+    }
+
+    public HomeAuthPage clickSaveChangeButton() {
         scrollToLocator(changeButton);
         waitClickable(changeButton).click();
-
         return new HomeAuthPage(driver);
     }
 
@@ -89,12 +86,9 @@ public class EditListingPage extends BasePage {
         By divImg =  By.xpath("//div[contains(@class,'upload_editContainer__NMV1M')]" +
                 "[.//input[contains(@name,'" + imgField + "')]]" +
                 "/div[contains(@class,'upload_edit__YJ8yi')]");
-        System.out.println(divImg);
         scrollToLocator(divImg);
         WebElement el = presenceLocator(divImg);
-        System.out.println(el);
         String actualSrc = el.findElement(divImg).getAttribute("style");
-        System.out.println(actualSrc);
 
         assertTrue(actualSrc.contains("img_4.jpg"));
     }

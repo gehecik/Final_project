@@ -11,9 +11,13 @@ import org.example.pages.ad.EditListingPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.example.utils.EnvConfig.EXPLICIT_TIMEOUT;
 
 public class HomeAuthPage extends BasePage {
     protected final By exitButton = By.xpath("//button[text()='Выйти']");
@@ -60,10 +64,9 @@ public class HomeAuthPage extends BasePage {
     }
 
     @Step("Check the ad")
-    public void checkAd(Ad ad, boolean checkImage) {
-        System.out.println("Check the ad");
-
+    public void checkAd(Ad ad, boolean checkImage) throws InterruptedException {
         presenceLocator(bar);
+        waitCardsLoaded();
 
         int attempts = 1;
         int maxAttempts = getMaxAttempts(bar);
@@ -71,7 +74,6 @@ public class HomeAuthPage extends BasePage {
         while (attempts <= maxAttempts) {
             AdCard foundCard = findCard(ad);
             if (foundCard != null) {
-
                 currentCard = foundCard;
 
                 if (checkImage) {
@@ -83,11 +85,9 @@ public class HomeAuthPage extends BasePage {
 
                 return;
             }
-
             if (isLastPage()) {
                 break;
             }
-
             goToNextPage();
 
             attempts++;
@@ -99,7 +99,6 @@ public class HomeAuthPage extends BasePage {
 
     @Step("Click the button (edit)")
     public EditListingPage clickEdit() {
-        System.out.println("Click the button (edit)");
         AdCard freshCard = findCardByNameAndCity(
                 currentCard.getName(),
                 currentCard.getCity());
@@ -110,48 +109,57 @@ public class HomeAuthPage extends BasePage {
     }
 
     public List<AdCard> getCards() {
+        for (int i = 0; i < 3; i++) {
 
-        WebElement container = driver.findElement(cardsContainer);
+            try {
+                WebElement container = presenceLocator(cardsContainer);//driver.findElement(cardsContainer);
+                presenceLocator(cardsContainer);
 
-        return container.findElements(cards)
-                .stream()
-                .map(card -> {
-                    String imgSrc = card.findElement(img).getAttribute("src");
-                    WebElement aboutBlock = card.findElement(about);
-                    String name = aboutBlock.findElement(By.tagName("h2")).getText();
-                    String city = aboutBlock.findElement(By.tagName("h3")).getText();
-                    String cost = card.findElement(price).getText().replaceAll("[^0-9]", "");
-                    WebElement button = card.findElement(this.button);
+                return container.findElements(cards)
+                        .stream()
+                        .map(card -> {
+                            String imgSrc = card.findElement(img).getAttribute("src");
+                            WebElement aboutBlock = card.findElement(about);
+                            String name = aboutBlock.findElement(By.tagName("h2")).getText();
+                            String city = aboutBlock.findElement(By.tagName("h3")).getText();
+                            String cost = card.findElement(price).getText().replaceAll("[^0-9]", "");
+                            WebElement button = card.findElement(this.button);
 
-                    return new AdCard(imgSrc, name, city, cost, button, card);
-                }).collect(Collectors.toList());
+                            return new AdCard(imgSrc, name, city, cost, button, card);
+                        }).collect(Collectors.toList());
+            } catch (org.openqa.selenium.StaleElementReferenceException e) {
+                System.out.println("Еще раз");
+            }
+        }
+        throw new RuntimeException("Нет карточки");
     }
 
     public AdCard findCard(Ad ad) {
-
         return getCards().stream()
-                .filter(card ->
-                        ad.getName().equals(card.getName())
-                                && ad.getCity().equals(card.getCity()))
+                .filter(card ->{
+                    if (ad.getName() == null || ad.getName().isBlank()) {
+                        return ad.getCity().equals(card.getCity())
+                                && card.getButton()
+                                .getAttribute("class")
+                                .contains("editButton");
+                    }
+                    return ad.getName().equals(card.getName())
+                            && ad.getCity().equals(card.getCity());
+                })
                 .findFirst()
                 .orElse(null);
     }
 
     private void goToNextPage() {
-
         presenceLocator(bar);
-
         scrollToLocator(bar);
-
         WebElement next = presenceLocator(arrowButton);
-
         String oldPage = presenceLocator(bar).getText();
-        String oldAd = presenceLocator(adsList).getText();
 
         next.click();
 
         reloadPage(bar, oldPage);
-        reloadPage(adsList, oldAd);
+        waitCardsLoaded();
     }
 
     public AdCard findCardByNameAndCity(String name, String city) {
@@ -179,5 +187,56 @@ public class HomeAuthPage extends BasePage {
         card.getCard().click();
 
         return new AdPage(driver);
+    }
+
+    @Step("Check the ad is deleted")
+    public void checkAdDeleted(Ad ad) throws InterruptedException {
+        presenceLocator(bar);
+        waitCardsLoaded();
+
+        new WebDriverWait(driver, EXPLICIT_TIMEOUT)
+                .pollingEvery(Duration.ofMillis(500))
+                .until(driver -> findCard(ad) == null);
+
+        int attempts = 1;
+        int maxAttempts = getMaxAttempts(bar);
+
+        while (attempts <= maxAttempts) {
+
+            AdCard foundCard = findCard(ad);
+
+            if (foundCard != null) {
+                throw new AssertionError("Объявление '" + ad.getName() + "' найдено, но должно быть удалено");
+            }
+
+            if (isLastPage()) {
+                return;
+            }
+
+            goToNextPage();
+            attempts++;
+        }
+    }
+
+    private boolean adExists(Ad ad) {
+
+        int attempts = 1;
+        int maxAttempts = getMaxAttempts(bar);
+
+        while (attempts <= maxAttempts) {
+
+            if (findCard(ad) != null) {
+                return true;
+            }
+
+            if (isLastPage()) {
+                return false;
+            }
+
+            goToNextPage();
+            attempts++;
+        }
+
+        return false;
     }
 }
